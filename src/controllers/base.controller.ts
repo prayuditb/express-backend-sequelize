@@ -179,7 +179,7 @@ export default abstract class Controller {
       response.data = await this.model.findAll(options)
       await this.model.destroy(options)
       return Promise.resolve(response)
-    } catch(err) {
+    } catch (err) {
       return Promise.reject(catchResponse(err))
     }
   }

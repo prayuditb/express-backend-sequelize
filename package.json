@@ -25,7 +25,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run tslint"
+      "pre-commit": "npm run build"
     }
   },
   "dependencies": {
