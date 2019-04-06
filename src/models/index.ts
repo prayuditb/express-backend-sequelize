@@ -1,7 +1,7 @@
 import { Sequelize, Model } from "sequelize";
 import userFactory, { User } from "./user.model";
 
-type DB = {
+export type DB = {
   sequelize: Sequelize
   User: any
   [key: string]: any

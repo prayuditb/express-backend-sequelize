@@ -1,8 +1,30 @@
 import { Request } from "express"
 import * as Sequelize from "sequelize/types"
-import db from "../models"
+import db, { DB } from "../models"
 
-class ModelClass extends Sequelize.Model {}
+export function catchResponse(err: ResponseObject | Error): ResponseObject {
+  const res: ResponseObject = {
+    status_code: 500,
+    message: "Something went wrong",
+    dev_message: err.message || "Internal server error",
+    data: [],
+  }
+  if (err instanceof Error) {
+    return res
+  }
+  return err
+}
+
+export function getRelationModels(relations: string[], db: DB): any[] | Error {
+  const relationModels = []
+  for (let idx = 0; idx < relations.length; idx += 1) {
+    if (db[relations[idx]]) {
+      return new Error(`Relation "${relations[idx]}" not found`)
+    }
+    relationModels.push(db[relations[idx]])
+  }
+  return relationModels
+}
 
 export default abstract class Controller {
   protected model: any
@@ -18,19 +40,26 @@ export default abstract class Controller {
    * perpage: number
    * relations: comma sparated model name (query including relation data)
    * where: field name
-   * value: number or string
+   * where_value: number or string
+   * order_by: field name
+   * desc: boolean
+   * group_by: field name
    */
   async index(req: Request): Promise<ResponseObject> {
     const page: number = req.query.page || 1
     const perpage: number = req.query.perpage || 20
     const relations: string = req.query.relations || ""
     const where: string = req.query.where || ""
-    const value: string = req.query.value || ""
-    const offset: number =  page * perpage
+    const whereValue: string = req.query.where_value || ""
+    const offset: number =  (page - 1) * perpage
+    const orderBy: string = req.query.order_by || ""
+    const isDesc: boolean = req.query.desc == "true"
+    const groupBy: string = req.query.group_by || ""
 
     const response: ResponseObject = {
       status_code: 200,
-      message: "success",
+      message: "Success",
+      dev_message: "success",
       data: []
     }
 
@@ -40,50 +69,100 @@ export default abstract class Controller {
         page, perpage, total_pages: Math.ceil(count / perpage)
       }
 
-      const options: Sequelize.FindOptions = {}
+      const options: Sequelize.FindOptions = {
+        offset,
+        limit: perpage
+      }
+
+      // query with join relation
       if (relations !== "") {
-        const relationModels = []
-        const relationArray: string[] = relations.split(",")
-        for (let idx = 0; idx < relationArray.length; idx += 1) {
-          if (db[relationArray[idx]]) {
-            response.status_code = 422
-            response.message = `Relation "${relationArray[idx]}" not found`
-            throw response
-          }
-          relationModels.push(db[relations[idx]])
+        const relationModels: any[] | Error = getRelationModels(relations.split(","), db)
+        if (relationModels instanceof Error) {
+          response.status_code = 422
+          response.dev_message = relationModels.message
+          response.message = "Data Given is invalid"
+          throw response
         }
         options.include = relationModels
       }
+
+      // query with where clause
       if (where !== "") {
         options.where = {
-          [where]: value
+          [where]: whereValue
         }
       }
 
-      const result: any[] = await this.model.findAll(options)
-      response.data = result
+      // query with order clause
+      if (orderBy !== "") {
+        const order: string[] = [orderBy]
+        if (isDesc) { order.push("DESC") }
+        options.order = order
+      }
+
+      // qeury with group by clause
+      if (groupBy !== "") {
+        options.group = groupBy
+      }
+
+      response.data = await this.model.findAll(options)
       return Promise.resolve(response)
     } catch (err) {
-      if (err.status_code) {
-        return Promise.reject(err)
-      }
-      return Promise.reject({
-        status_code: 500,
-        message: err.message || "Internal server error",
-        data: [],
-      })
+      return Promise.reject(catchResponse(err))
     }
   }
 
   // create data into databse
-  // async store(req: Request): Promise<ResponseObject>  {
+  async store(req: Request): Promise<ResponseObject>  {
+    const response: ResponseObject = {
+      status_code: 200,
+      message: "Success",
+      dev_message: "success",
+      data: []
+    }
 
-  // }
+    try {
+      response.data = await this.model.create(req.body)
+      return Promise.resolve(response)
+    } catch (err) {
+      return Promise.reject(catchResponse(err))
+    }
+  }
 
-  // // find spesific data by its id
-  // async find(id: number): Promise<ResponseObject>{
+  // find spesific data by its id
+  async find(req: Request): Promise<ResponseObject> {
+    const relations: string = req.query.relation || ""
+    const response: ResponseObject = {
+      status_code: 200,
+      message: "Success",
+      dev_message: "success",
+      data: []
+    }
 
-  // }
+    try {
+      const id: number = parseInt(req.query.id, 10)
+      const options: Sequelize.FindOptions = {
+        where: { id }
+      }
+
+      // query with join relation
+      if (relations !== "") {
+        const relationModels: any[] | Error = getRelationModels(relations.split(","), db)
+        if (relationModels instanceof Error) {
+          response.status_code = 422
+          response.dev_message = relationModels.message
+          response.message = "Data given is invalid"
+          throw response
+        }
+        options.include = relationModels
+      }
+
+      response.data = await this.model.findAll(options)
+      return Promise.resolve(response)
+    } catch (err) {
+      return Promise.reject(catchResponse(err))
+    }
+  }
 
   // // delete a specific data by its id
   // async destroy(id: number): Promise<ResponseObject> {
