@@ -130,7 +130,7 @@ export default abstract class Controller {
   }
 
   // find spesific data by its id
-  async find(req: Request): Promise<ResponseObject> {
+  async find(id: number, req: Request): Promise<ResponseObject> {
     const relations: string = req.query.relation || ""
     const response: ResponseObject = {
       status_code: 200,
@@ -140,7 +140,6 @@ export default abstract class Controller {
     }
 
     try {
-      const id: number = parseInt(req.query.id, 10)
       const options: Sequelize.FindOptions = {
         where: { id }
       }
@@ -164,14 +163,46 @@ export default abstract class Controller {
     }
   }
 
-  // // delete a specific data by its id
-  // async destroy(id: number): Promise<ResponseObject> {
+  // delete a specific data by its id
+  async destroy(id: number): Promise<ResponseObject> {
+    const response: ResponseObject = {
+      status_code: 200,
+      message: "Delete data successful",
+      dev_message: "success",
+      data: []
+    }
 
-  // }
+    try {
+      const options: Sequelize.FindOptions = {
+        where: { id }
+      }
+      response.data = await this.model.findAll(options)
+      await this.model.destroy(options)
+      return Promise.resolve(response)
+    } catch(err) {
+      return Promise.reject(catchResponse(err))
+    }
+  }
 
-  // // update specific data by its id
-  // async update(id: number, req: Request): Promise<ResponseObject> {
+   // update specific data by its id
+  async update(id: number, req: Request): Promise<ResponseObject> {
+    const response: ResponseObject = {
+      status_code: 200,
+      message: "Delete data successful",
+      dev_message: "success",
+      data: []
+    }
 
-  // }
+    try {
+      const options: Sequelize.FindOptions = {
+        where: { id }
+      }
+      await this.model.update(req.body, options)
+      response.data = await this.model.findAll(options)
+      return Promise.resolve(response)
+    } catch (err) {
+      return Promise.reject(catchResponse(err))
+    }
+  }
+
 }
-
