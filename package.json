@@ -24,18 +24,23 @@
     "watch-debug": "concurrently -k -p \"[{name}]\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\""
   },
   "husky": {
-    "pre-push": "npm run test"
+    "pre-push": "npm run test",
+    "pre-commit": "npm run tslint"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.18.3",
     "compression": "^1.7.4",
     "dotenv": "^7.0.0",
     "errorhandler": "^1.5.0",
     "express": "^4.16.4",
     "express-validator": "^5.3.1",
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "passport": "^0.4.0",
     "passport-http-bearer": "^1.0.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "sequelize": "^5.2.11",
     "winston": "^3.2.1"
   },
