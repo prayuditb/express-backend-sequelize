@@ -10,14 +10,15 @@ dotenv.config()
 const app = express()
 
 
-if (process.env.NODE_ENV !== "production") {
-  app.use(errorHandler)
-}
 
 app.set("port", process.env.PORT || 3000)
 app.set("env", process.env.NODE_ENV || "development")
 
+if (process.env.NODE_ENV !== "production") {
+  app.use(errorHandler)
+}
 app.use(compression())
+app.use(expressValidator())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(expressValidator())
