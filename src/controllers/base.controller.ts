@@ -2,30 +2,6 @@ import { Request } from "express"
 import * as Sequelize from "sequelize/types"
 import db, { DB } from "../models"
 
-export function catchResponse(err: ResponseObject | Error): ResponseObject {
-  const res: ResponseObject = {
-    status_code: 500,
-    message: "Something went wrong",
-    dev_message: err.message || "Internal server error",
-    data: [],
-  }
-  if (err instanceof Error) {
-    return res
-  }
-  return err
-}
-
-export function getRelationModels(relations: string[], db: DB): any[] | Error {
-  const relationModels = []
-  for (let idx = 0; idx < relations.length; idx += 1) {
-    if (db[relations[idx]]) {
-      return new Error(`Relation "${relations[idx]}" not found`)
-    }
-    relationModels.push(db[relations[idx]])
-  }
-  return relationModels
-}
-
 export default abstract class Controller {
   protected model: any
 
@@ -83,7 +59,7 @@ export default abstract class Controller {
 
       // query with join relation
       if (relations !== "") {
-        const relationModels: any[] | Error = getRelationModels(relations.split(","), db)
+        const relationModels: any[] | Error = this.getRelationModels(relations.split(","), db)
         if (relationModels instanceof Error) {
           response.status_code = 422
           response.dev_message = relationModels.message
@@ -115,7 +91,7 @@ export default abstract class Controller {
       response.data = await this.model.findAll(options)
       return Promise.resolve(response)
     } catch (err) {
-      return Promise.reject(catchResponse(err))
+      return Promise.reject(this.catchResponse(err))
     }
   }
 
@@ -132,7 +108,7 @@ export default abstract class Controller {
       response.data = await this.model.create(req.body)
       return Promise.resolve(response)
     } catch (err) {
-      return Promise.reject(catchResponse(err))
+      return Promise.reject(this.catchResponse(err))
     }
   }
 
@@ -153,7 +129,7 @@ export default abstract class Controller {
 
       // query with join relation
       if (relations !== "") {
-        const relationModels: any[] | Error = getRelationModels(relations.split(","), db)
+        const relationModels: any[] | Error = this.getRelationModels(relations.split(","), db)
         if (relationModels instanceof Error) {
           response.status_code = 422
           response.dev_message = relationModels.message
@@ -166,7 +142,7 @@ export default abstract class Controller {
       response.data = await this.model.findAll(options)
       return Promise.resolve(response)
     } catch (err) {
-      return Promise.reject(catchResponse(err))
+      return Promise.reject(this.catchResponse(err))
     }
   }
 
@@ -187,7 +163,7 @@ export default abstract class Controller {
       await this.model.destroy(options)
       return Promise.resolve(response)
     } catch (err) {
-      return Promise.reject(catchResponse(err))
+      return Promise.reject(this.catchResponse(err))
     }
   }
 
@@ -208,8 +184,34 @@ export default abstract class Controller {
       response.data = await this.model.findAll(options)
       return Promise.resolve(response)
     } catch (err) {
-      return Promise.reject(catchResponse(err))
+      return Promise.reject(this.catchResponse(err))
     }
+  }
+
+  // error response adapter
+  protected catchResponse(err: ResponseObject | Error): ResponseObject {
+    const res: ResponseObject = {
+      status_code: 500,
+      message: "Something went wrong",
+      dev_message: err.message || "Internal server error",
+      data: [],
+    }
+    if (err instanceof Error) {
+      return res
+    }
+    return err
+  }
+
+  // helper to convert array of model names to array of models
+  protected getRelationModels(relations: string[], db: DB): any[] | Error {
+    const relationModels = []
+    for (let idx = 0; idx < relations.length; idx += 1) {
+      if (db[relations[idx]]) {
+        return new Error(`Relation "${relations[idx]}" not found`)
+      }
+      relationModels.push(db[relations[idx]])
+    }
+    return relationModels
   }
 
 }
