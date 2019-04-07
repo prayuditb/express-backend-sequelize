@@ -1,16 +1,15 @@
 import { Sequelize, Model } from "sequelize";
 import userFactory, { User } from "./user.model";
-import allConfig from "../config"
+import * as config  from "../config"
 
 export type DB = {
   sequelize: Sequelize
   User: any
   [key: string]: any
 }
-
+const temp: {[key: string]: any} = config
 const env = process.env.NODE_ENV || "development";
-const config = allConfig[env];
-const sequelize = new Sequelize(config.database, config.username, config.passowrd, config)
+const sequelize = new Sequelize(temp[env].database, temp[env].username, temp[env].passowrd, temp[env])
 const db: DB = {
   sequelize,
   User: userFactory(sequelize),
