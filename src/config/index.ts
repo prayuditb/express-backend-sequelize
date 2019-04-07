@@ -8,7 +8,7 @@ type Config = {
   database: string
   host: string
   dialect: string
-  use_env_variable: string
+  logging?: boolean
 }
 type ConfigTest = {
   dialect: string
@@ -21,7 +21,6 @@ export const development: Config  = {
   database: process.env.DB_NAME,
   host: process.env.DB_HOSTNAME,
   dialect: "postgres",
-  use_env_variable: "DATABASE_URL"
 }
 
 export const production: Config  = {
@@ -29,8 +28,8 @@ export const production: Config  = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   host: process.env.DB_HOSTNAME,
+  logging: false,
   dialect: "postgres",
-  use_env_variable: "DATABASE_URL"
 }
 
 export const test: ConfigTest  = {

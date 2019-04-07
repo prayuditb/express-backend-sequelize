@@ -60,7 +60,14 @@ export default abstract class Controller {
       status_code: 200,
       message: "Success",
       dev_message: "success",
-      data: []
+      data: [],
+      query: {
+        where,
+        where_value: whereValue,
+        desc: isDesc,
+        order_by: orderBy,
+        group_by: groupBy,
+      }
     }
 
     try {

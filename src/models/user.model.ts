@@ -3,28 +3,31 @@ import * as Sequelize from "sequelize"
 export class User extends Sequelize.Model {
   id?: number
   email!: string
-  firstName!: string
-  lastName!: string
+  first_name!: string
+  last_name!: string
   password!: string
   gender: string
-  phoneNumber: string
-  birthDate: string
-  googleId: string
-  forgotPassword: string
-  readonly createdAt!: Date;
-  readonly updatedAt!: Date;
+  phone_number: string
+  birth_date: string
+  forgot_password: string
+  readonly created_at!: Date;
+  readonly updated_at!: Date;
+  readonly deleted_at!: Date;
 }
 
 export default (sequelize: Sequelize.Sequelize) => {
   User.init({
     email: { type: Sequelize.DataTypes.STRING, unique: true },
-    phoneNumber: { type: Sequelize.DataTypes.STRING, unique: true },
-    firstName: { type: Sequelize.DataTypes.STRING },
-    lastName: { type: Sequelize.DataTypes.STRING },
+    phone_number: { type: Sequelize.DataTypes.STRING, unique: true },
+    first_name: { type: Sequelize.DataTypes.STRING },
+    last_name: { type: Sequelize.DataTypes.STRING },
     password: { type: Sequelize.DataTypes.STRING },
     gender: { type: Sequelize.DataTypes.STRING },
-    birthDate: { type: Sequelize.DataTypes.DATE },
-    forgotPassword: { type: Sequelize.DataTypes.STRING },
+    birth_date: { type: Sequelize.DataTypes.DATE },
+    forgot_password: { type: Sequelize.DataTypes.STRING },
+    created_at: { type: Sequelize.DataTypes.DATE },
+    updated_at: { type: Sequelize.DataTypes.DATE },
+    deleted_at: { type: Sequelize.DataTypes.DATE },
   }, {
     sequelize,
     timestamps: true,
