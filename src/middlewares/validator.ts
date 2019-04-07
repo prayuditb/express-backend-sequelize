@@ -10,7 +10,7 @@ export default () => {
         message: "Data sumitted is invalid",
         errors: errors.array(),
         dev_message: "Validation failed",
-        data:[],
+        data: [],
       }
       return res.status(response.status_code).json(response);
     }
