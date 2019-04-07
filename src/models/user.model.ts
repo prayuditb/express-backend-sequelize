@@ -17,8 +17,8 @@ export class User extends Sequelize.Model {
 
 export default (sequelize: Sequelize.Sequelize) => {
   User.init({
-    email: { type: Sequelize.DataTypes.STRING, unique: true },
-    phone_number: { type: Sequelize.DataTypes.STRING, unique: true },
+    email: { type: Sequelize.DataTypes.STRING, unique: { name: "email", msg: "email already exist" }},
+    phone_number: { type: Sequelize.DataTypes.STRING, unique: { name: "phone_number", msg: "phone number already exist" }},
     first_name: { type: Sequelize.DataTypes.STRING },
     last_name: { type: Sequelize.DataTypes.STRING },
     password: { type: Sequelize.DataTypes.STRING },

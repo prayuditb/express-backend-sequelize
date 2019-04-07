@@ -17,8 +17,6 @@ const bodyValidations = [
 router.get("/", (req: Request, res: Response) => {
   userController.index(req).then((response: ResponseObject) => {
     res.status(response.status_code).json(response)
-  }).catch((err) => { // err is instance of ResponseObject
-    res.status(err.status_code).json(err)
   })
 })
 
@@ -26,16 +24,12 @@ router.get("/:id", check("id").isInt().toInt(), validationHandler(), (req: Reque
   const id = req.params.id
   userController.find(id, req).then((response: ResponseObject) => {
     res.status(response.status_code).json(response)
-  }).catch((err) => { // err is instance of ResponseObject
-    res.status(err.status_code).json(err)
   })
 })
 
 router.post("/", bodyValidations, validationHandler(), (req: Request, res: Response) => {
   userController.store(req).then((response: ResponseObject) => {
     res.status(response.status_code).json(response)
-  }).catch((err) => { // err is instance of ResponseObject
-    res.status(err.status_code).json(err)
   })
 })
 
@@ -43,8 +37,6 @@ router.put("/:id", oneOf(bodyValidations), validationHandler(), (req: Request, r
   const id = req.params.id
   userController.update(id, req).then((response: ResponseObject) => {
     res.status(response.status_code).json(response)
-  }).catch((err) => { // err is instance of ResponseObject
-    res.status(err.status_code).json(err)
   })
 })
 
@@ -52,8 +44,6 @@ router.delete("/:id", check("id").isInt().toInt(), validationHandler(), (req: Re
   const id = req.params.id
   userController.destroy(id).then((response: ResponseObject) => {
     res.status(response.status_code).json(response)
-  }).catch((err) => { // err is instance of ResponseObject
-    res.status(err.status_code).json(err)
   })
 })
 

@@ -91,7 +91,7 @@ export default abstract class Controller {
       response.data = await this.model.findAll(options)
       return Promise.resolve(response)
     } catch (err) {
-      return Promise.reject(this.catchResponse(err))
+      return this.catchResponse(err)
     }
   }
 
@@ -108,7 +108,7 @@ export default abstract class Controller {
       response.data = await this.model.create(req.body)
       return Promise.resolve(response)
     } catch (err) {
-      return Promise.reject(this.catchResponse(err))
+      return this.catchResponse(err)
     }
   }
 
@@ -142,7 +142,7 @@ export default abstract class Controller {
       response.data = await this.model.findAll(options)
       return Promise.resolve(response)
     } catch (err) {
-      return Promise.reject(this.catchResponse(err))
+      return this.catchResponse(err)
     }
   }
 
@@ -163,7 +163,7 @@ export default abstract class Controller {
       await this.model.destroy(options)
       return Promise.resolve(response)
     } catch (err) {
-      return Promise.reject(this.catchResponse(err))
+      return this.catchResponse(err)
     }
   }
 
@@ -184,15 +184,15 @@ export default abstract class Controller {
       response.data = await this.model.findAll(options)
       return Promise.resolve(response)
     } catch (err) {
-      return Promise.reject(this.catchResponse(err))
+      return this.catchResponse(err)
     }
   }
 
-  // error response adapter
+  // error instance to response object adapter
   protected catchResponse(err: ResponseObject | Error): ResponseObject {
     const res: ResponseObject = {
       status_code: 500,
-      message: "Something went wrong",
+      message: "Oops, something went wrong",
       dev_message: err.message || "Internal server error",
       data: [],
     }
