@@ -1,5 +1,6 @@
 import { Sequelize, Model } from "sequelize";
 import userFactory, { User } from "./user.model";
+import allConfig from "../config"
 
 export type DB = {
   sequelize: Sequelize
@@ -8,8 +9,8 @@ export type DB = {
 }
 
 const env = process.env.NODE_ENV || "development";
-const config = require("/../config/index.ts")[env];
-const sequelize = new Sequelize(config.url || process.env.DATABSE_CONNECTION_URI, config);
+const config = allConfig[env];
+const sequelize = new Sequelize(config.database, config.username, config.passowrd, config)
 const db: DB = {
   sequelize,
   User: userFactory(sequelize),
