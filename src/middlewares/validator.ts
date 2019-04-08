@@ -9,7 +9,7 @@ export default () => {
         status_code: 422,
         message: "Data sumitted is invalid",
         errors: errors.array(),
-        dev_message: "Validation failed",
+        dev_message: "validation errors",
         data: [],
       }
       return res.status(response.status_code).json(response);
