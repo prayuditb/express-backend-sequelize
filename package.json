@@ -23,8 +23,9 @@
     "serve-debug": "nodemon --inspect dist/server.js",
     "db:migrate": "sequelize db:migrate",
     "watch-debug": "concurrently -k -p \"[{name}]\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\"",
+    "docs:generate": "apidoc -o docs/ -i src/routes/",
     "pm2": "pm2",
-    "docs:generate": "apidoc -o docs/ -i src/routes/"
+    "sequelize": "sequelize"
   },
   "husky": {
     "hooks": {
