@@ -4,9 +4,11 @@ import db, { DB } from "../models"
 
 export default abstract class Controller {
   protected model: any
+  protected exclude_fields: string[]
 
-  constructor(model: any) {
+  constructor(model: any, excludes?: string[]) {
     this.model = model
+    this.exclude_fields = excludes
   }
 
   /**
@@ -55,6 +57,10 @@ export default abstract class Controller {
       const options: Sequelize.FindOptions = {
         offset,
         limit: perpage
+      }
+
+      if (this.exclude_fields) {
+        options.attributes = { exclude: this.exclude_fields }
       }
 
       // query with join relation
@@ -125,6 +131,11 @@ export default abstract class Controller {
     try {
       const options: Sequelize.FindOptions = {
         where: { id }
+      }
+
+      // exclude field
+      if (this.exclude_fields) {
+        options.attributes = { exclude: this.exclude_fields }
       }
 
       // query with join relation

@@ -3,7 +3,7 @@ import db from "../models"
 
 class UserController extends Controller {
   constructor() {
-    super(db.User)
+    super(db.User, ["password"])
   }
 }
 
