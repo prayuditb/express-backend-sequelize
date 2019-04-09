@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import i18n from "i18n"
-import path from 'path'
+import path from "path"
 
 i18n.configure({
   locales: ["en", "id"],
