@@ -1,0 +1,9 @@
+{
+  "Success": "Success",
+  "Oops, something went wrong": "Oops, something went wrong",
+  "Relation \"%s\" not found": "Relation \"%s\" not found",
+  "Find relation failed": "Find relation failed",
+  "Delete data successful": "Delete data successful",
+  "Update data successful": "Update data successful",
+  "Internal server error": "Internal server error"
+}

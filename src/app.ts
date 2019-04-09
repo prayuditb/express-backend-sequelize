@@ -3,6 +3,7 @@ import compression from "compression"
 import bodyParser from "body-parser"
 import passport from "passport"
 import expressValidator from "express-validator"
+import localeMiddleware from "./middlewares/locale"
 
 import userRoute from "./routes/user.route"
 
@@ -12,6 +13,7 @@ app.set("port", process.env.PORT || 3000)
 app.set("env", process.env.NODE_ENV || "development")
 
 // middlewares
+app.use(localeMiddleware())
 app.use(compression())
 app.use(expressValidator())
 app.use(bodyParser.json())

@@ -1,6 +1,7 @@
 import { Request } from "express"
 import * as Sequelize from "sequelize/types"
 import db, { DB } from "../models"
+import locale from "i18n"
 
 export default abstract class Controller {
   protected model: any
@@ -36,7 +37,7 @@ export default abstract class Controller {
 
     const response: ResponseObject = {
       status_code: 200,
-      message: "Success",
+      message: locale.__("Success"),
       dev_message: "success",
       data: [],
       query: {
@@ -69,7 +70,7 @@ export default abstract class Controller {
         if (relationModels instanceof Error) {
           response.status_code = 422
           response.dev_message = relationModels.message
-          response.message = "Data Given is invalid"
+          response.message = locale.__("Find relation failed")
           throw response
         }
         options.include = relationModels
@@ -105,7 +106,7 @@ export default abstract class Controller {
   async store(req: Request): Promise<ResponseObject>  {
     const response: ResponseObject = {
       status_code: 200,
-      message: "Success",
+      message: locale.__("Success"),
       dev_message: "success",
       data: []
     }
@@ -123,7 +124,7 @@ export default abstract class Controller {
     const relations: string = req.query.relation || ""
     const response: ResponseObject = {
       status_code: 200,
-      message: "Success",
+      message: locale.__("Success"),
       dev_message: "success",
       data: []
     }
@@ -144,7 +145,7 @@ export default abstract class Controller {
         if (relationModels instanceof Error) {
           response.status_code = 422
           response.dev_message = relationModels.message
-          response.message = "Data given is invalid"
+          response.message = locale.__("Find relation failed")
           throw response
         }
         options.include = relationModels
@@ -161,7 +162,7 @@ export default abstract class Controller {
   async destroy(id: number): Promise<ResponseObject> {
     const response: ResponseObject = {
       status_code: 200,
-      message: "Delete data successful",
+      message: locale.__("Delete data successful"),
       dev_message: "success",
       data: []
     }
@@ -182,7 +183,7 @@ export default abstract class Controller {
   async update(id: number, req: Request): Promise<ResponseObject> {
     const response: ResponseObject = {
       status_code: 200,
-      message: "Delete data successful",
+      message: locale.__("Update data successful"),
       dev_message: "success",
       data: []
     }
@@ -203,8 +204,8 @@ export default abstract class Controller {
   protected catchResponse(err: ResponseObject | Error): ResponseObject {
     const res: ResponseObject = {
       status_code: 500,
-      message: "Oops, something went wrong",
-      dev_message: err.message || "Internal server error",
+      message: locale.__("Oops, something went wrong"),
+      dev_message: err.message || locale.__("Internal server error"),
       data: [],
     }
     if (err instanceof Error) {
@@ -218,7 +219,7 @@ export default abstract class Controller {
     const relationModels = []
     for (let idx = 0; idx < relations.length; idx += 1) {
       if (db[relations[idx]]) {
-        return new Error(`Relation "${relations[idx]}" not found`)
+        return new Error(locale.__("Relation \"%s\" not found", relations[idx]))
       }
       relationModels.push(db[relations[idx]])
     }
