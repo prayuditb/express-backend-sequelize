@@ -1,4 +1,5 @@
 import * as Sequelize from "sequelize"
+import { DB } from "./index"
 
 export class User extends Sequelize.Model {
   id?: number
@@ -13,21 +14,25 @@ export class User extends Sequelize.Model {
   readonly created_at!: Date;
   readonly updated_at!: Date;
   readonly deleted_at!: Date;
+
+  static associate(db: DB) {
+    db.User.hasMany(db.UserRole)
+  }
 }
 
 export default (sequelize: Sequelize.Sequelize) => {
   User.init({
-    email: { type: Sequelize.DataTypes.STRING, unique: { name: "email", msg: "email already exist" }},
-    phone_number: { type: Sequelize.DataTypes.STRING, unique: { name: "phone_number", msg: "phone number already exist" }},
-    first_name: { type: Sequelize.DataTypes.STRING },
-    last_name: { type: Sequelize.DataTypes.STRING },
-    password: { type: Sequelize.DataTypes.STRING },
-    gender: { type: Sequelize.DataTypes.STRING },
-    birth_date: { type: Sequelize.DataTypes.DATE },
-    forgot_password: { type: Sequelize.DataTypes.STRING },
-    created_at: { type: Sequelize.DataTypes.DATE },
-    updated_at: { type: Sequelize.DataTypes.DATE },
-    deleted_at: { type: Sequelize.DataTypes.DATE },
+    email: { field: "email", type: Sequelize.DataTypes.STRING, unique: { name: "email", msg: "email already exist" }},
+    phone_number: { field: "phone_number", type: Sequelize.DataTypes.STRING, unique: { name: "phone_number", msg: "phone number already exist" }},
+    first_name: { field: "first_name", type: Sequelize.DataTypes.STRING },
+    last_name: { field: "last_name", type: Sequelize.DataTypes.STRING },
+    password: { field: "password", type: Sequelize.DataTypes.STRING },
+    gender: { field: "gender", type: Sequelize.DataTypes.STRING },
+    birth_date: { field: "birth_date", type: Sequelize.DataTypes.DATE },
+    forgot_password: { field: "forgot_password", type: Sequelize.DataTypes.STRING },
+    created_at: { field: "created_at", type: Sequelize.DataTypes.DATE },
+    updated_at: { field: "updated_at", type: Sequelize.DataTypes.DATE },
+    deleted_at: { field: "deleted_at", type: Sequelize.DataTypes.DATE },
   }, {
     sequelize,
     timestamps: true,

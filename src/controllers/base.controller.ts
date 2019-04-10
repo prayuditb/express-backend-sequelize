@@ -66,6 +66,7 @@ export default abstract class Controller {
 
       // query with join relation
       if (relations !== "") {
+
         const relationModels: any[] | Error = this.getRelationModels(relations.split(","), db)
         if (relationModels instanceof Error) {
           response.status_code = 422
@@ -205,7 +206,7 @@ export default abstract class Controller {
     const res: ResponseObject = {
       status_code: 500,
       message: locale.__("Oops, something went wrong"),
-      dev_message: err.message || locale.__("Internal server error"),
+      dev_message: err.message || "internal server error",
       data: [],
     }
     if (err instanceof Error) {
@@ -219,9 +220,11 @@ export default abstract class Controller {
     const relationModels = []
     for (let idx = 0; idx < relations.length; idx += 1) {
       if (db[relations[idx]]) {
-        return new Error(locale.__("Relation \"%s\" not found", relations[idx]))
+        relationModels.push(db[relations[idx]])
       }
-      relationModels.push(db[relations[idx]])
+    }
+    if (relationModels.length <= 0 ) {
+      return new Error(`relation "${relations.join(",")}" not found`)
     }
     return relationModels
   }

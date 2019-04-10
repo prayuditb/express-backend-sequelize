@@ -15,8 +15,6 @@ module.exports = {
         deleted_at: { type: Sequelize.DATE },
         created_at: { type: Sequelize.DATE },
         updated_at: { type: Sequelize.DATE },
-      }, {
-        underscored: true
       });
   },
 
