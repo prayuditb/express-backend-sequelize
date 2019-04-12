@@ -40,7 +40,14 @@ class AuthController extends Controller {
         throw res
       }
       const users = usersDb.map((user: any) => user.toJSON())
-      const token = jwt.sign(users[0], process.env.SECRET, { expiresIn: "30d" })
+      const sign = {
+        id: users[0].id,
+        email: users[0].email,
+        phone_number: users[0].phone_number,
+        first_name: users[0].first_name,
+        last_name: users[0].last_name,
+      }
+      const token = jwt.sign(sign, process.env.SECRET, { expiresIn: "30d" })
       delete users[0].password
       delete users[0].forgot_password
       res.data.push({ ...users[0], access_token: token })
@@ -58,7 +65,14 @@ class AuthController extends Controller {
       if (result.status_code >= 400) {
         throw result;
       }
-      const token = jwt.sign(result.data[0], process.env.SECRET, { expiresIn: "30d" })
+      const sign = {
+        id: result.data[0].id,
+        email: result.data[0].email,
+        phone_number: result.data[0].phone_number,
+        first_name: result.data[0].first_name,
+        last_name: result.data[0].last_name,
+      }
+      const token = jwt.sign(sign, process.env.SECRET, { expiresIn: "30d" })
       result.data = [{ ...result.data[0], access_token: token}]
       return Promise.resolve(result)
     } catch (err) {

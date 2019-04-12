@@ -14,6 +14,6 @@ interface ResponseObject {
     perpage: number
     total_pages: number
   }
-  data: Object[],
+  data: any[],
   errors?: Object[]
 }
