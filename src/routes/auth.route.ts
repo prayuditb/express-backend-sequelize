@@ -6,7 +6,7 @@ import validationHandler from "../middlewares/validation-handler.middleware"
 const router = express.Router()
 
 /**
- * @api {post} /auth/login-email
+ * @api {post} /auth/login-email Login by email
  * @apiVersion 1.0.0
  * @apiName Login with email
  * @apiDescription Login with email
@@ -33,7 +33,7 @@ router.post("/login-email",
 })
 
 /**
- * @api {post} /auth/register-email
+ * @api {post} /auth/register-email Register by email
  * @apiVersion 1.0.0
  * @apiName Register with email
  * @apiDescription Register with email
