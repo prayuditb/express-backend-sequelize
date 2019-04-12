@@ -20,7 +20,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // routes
-app.use("/user", userRoute)
-app.use("/auth", authRoute)
+app.use("/v1/user", userRoute)
+app.use("/v1/auth", authRoute)
 
 export default app
