@@ -5,5 +5,7 @@
   "Find relation failed": "Find relation failed",
   "Delete data successful": "Delete data successful",
   "Update data successful": "Update data successful",
-  "Internal server error": "Internal server error"
+  "Internal server error": "Internal server error",
+  "User not found": "User not found",
+  "Password is incorrect": "Password is incorrect"
 }

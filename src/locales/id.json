@@ -5,5 +5,7 @@
   "Find relation failed": "Pencarian relasi gagal",
   "Delete data successful": "Hapus data berhasil",
   "Update data successful": "Pembaharuan data berhasil",
-  "Internal server error": "Terjadi kesalahan pada server"
+  "Internal server error": "Terjadi kesalahan pada server",
+  "User not found": "Akun tidak ditemukan",
+  "Password is incorrect": "Kata sandi salah"
 }

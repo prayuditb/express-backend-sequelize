@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express"
 import { checkSchema, check, oneOf, validationResult } from "express-validator/check"
 import userController from "../controllers/user.controller"
-import validationHandler from "../middlewares/validation-handler"
+import validationHandler from "../middlewares/validation-handler.middleware"
 
 const router = express.Router()
 

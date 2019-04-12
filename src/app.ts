@@ -1,11 +1,11 @@
 import express from "express"
 import compression from "compression"
 import bodyParser from "body-parser"
-import passport from "passport"
 import expressValidator from "express-validator"
-import localeMiddleware from "./middlewares/locale"
+import localeMiddleware from "./middlewares/locale.middleware"
 
 import userRoute from "./routes/user.route"
+import authRoute from "./routes/auth.route"
 
 // config
 const app = express()
@@ -21,5 +21,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 // routes
 app.use("/user", userRoute)
+app.use("/auth", authRoute)
 
 export default app

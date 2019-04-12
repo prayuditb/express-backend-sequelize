@@ -113,7 +113,8 @@ export default abstract class Controller {
     }
 
     try {
-      response.data = await this.model.create(req.body)
+      const result: any = await this.model.create(req.body)
+      response.data =  [result.toJSON()]
       return Promise.resolve(response)
     } catch (err) {
       return this.catchResponse(err)
