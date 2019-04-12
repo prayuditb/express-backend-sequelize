@@ -6,16 +6,25 @@ import validationHandler from "../middlewares/validation-handler.middleware"
 const router = express.Router()
 
 /**
- * @api {post} auth/login-email
+ * @api {post} /auth/login-email
  * @apiVersion 1.0.0
  * @apiName Login with email
+ * @apiDescription Login with email
  * @apiGroup Auth
  * @apiParam {String} email user email
  * @apiParam {String} password md5 encrypted password
+ * @apiParam {String} secret secret string to get access
+ * @apiParamExample {json} Request-Example:
+ * {
+ * 	"email": "bayudesu23@gmail.com",
+ * 	"password": "bayudesu",
+ * 	"secret": "a430e06de5ce438d499c2e4063d60fd6"
+ * }
  */
 router.post("/login-email",
   check("email").isEmail().trim(),
   check("password").trim(),
+  check("secret").trim(),
   validationHandler(),
   (req: Request, res: Response) => {
   authController.loginEmail(req).then((response: ResponseObject) => {
@@ -24,15 +33,24 @@ router.post("/login-email",
 })
 
 /**
- * @api {post} auth/login-email
+ * @api {post} /auth/register-email
  * @apiVersion 1.0.0
- * @apiName Login with email
+ * @apiName Register with email
+ * @apiDescription Register with email
  * @apiGroup Auth
  * @apiParam {String} email user email
  * @apiParam {String} password md5 encrypted password
  * @apiParam {String} first_name firstname of user
  * @apiParam {String} last_name lastname of user
  * @apiParam {String} secret secret string to get access
+ * @apiParamExample {json} Request-Example:
+ * {
+ *	"email": "bayudesu23@gmail.com",
+ *	"password": "bayudesu",
+ *	"first_name": "bayu",
+ *	"last_name": "awesome",
+ *	"secret": "a430e06de5ce438d499c2e4063d60fd6"
+ * }
  */
 router.post("/register-email",
   check("email").isEmail().trim(),
