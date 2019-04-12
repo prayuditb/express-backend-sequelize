@@ -1,0 +1,42 @@
+image: node:10.15.3
+
+stages:
+    - pages
+    # - build
+    # - test
+    # - deploy-staging
+    # - deploy-production
+
+cache:
+  paths:
+    - node_modules/
+
+before_script:
+  - npm install
+
+# test:
+#   stage: test
+#   script:
+#     - npm install
+#     - cp .env.test .env
+#     - npm run test
+#   only:
+#     - branches
+#   except:
+#     - staging
+#     - master
+
+# Deploy documentation to gitlab pages
+# page can be accessed at https://<gitlabusername>.gitlab.io/<project_name>
+pages:
+  stage: pages
+  script:
+    - npm run docs:generate
+  when: manual
+  artifacts:
+    paths:
+      - docs
+    expire_in: 1 year
+  only:
+    - master
+    - staging
