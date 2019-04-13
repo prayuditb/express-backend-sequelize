@@ -1,14 +1,33 @@
 import { Request } from "express"
-import jwt, { JsonWebTokenError } from "jsonwebtoken"
+import jwt, { JsonWebTokenError, verify } from "jsonwebtoken"
 import { FindOptions } from "sequelize/types"
 import bcrypt from "bcrypt-nodejs"
 import Controller from "./base.controller"
 import db from "../models"
+import PayloadBuilder from "../utils/payload-builder.utils"
+import emailObserver from "../utils/email-observer.utils"
 import locale from "i18n"
 
-class AuthController extends Controller {
+class AuthController extends Controller implements Observable {
+  observers: Observer[] = []
   constructor() {
     super(db.User, ["password", "forgot_password"])
+  }
+
+  registerObserver(observer: Observer) {
+    this.observers.push(observer)
+  }
+
+  removeObserver(observer: Observer): number {
+    const idx = this.observers.indexOf(observer)
+    if (idx >= 0) {
+      this.observers.splice(idx, 1)
+    }
+    return idx
+  }
+
+  notifyObserver(payload: Payload) {
+    this.observers.forEach((observer: Observer) => observer.update(payload))
   }
 
   async loginEmail(req: Request) {
@@ -74,6 +93,20 @@ class AuthController extends Controller {
       }
       const token = jwt.sign(sign, process.env.SECRET, { expiresIn: "30d" })
       result.data = [{ ...result.data[0], access_token: token}]
+
+      // prepare payload to send email using builder pattern
+      const payload = new PayloadBuilder().setEmail(sign.email)
+        .setSubject(locale.__("Please verify your email address"))
+        .setName(`${sign.first_name} ${sign.last_name}`)
+        .setType("verify_email")
+        .setDynamicTemplate({
+          url: `${process.env.BASE_URL}/v1/auth/verify-email?token=${token}`,
+          message: locale.__("register welcome email"),
+          button_label: locale.__("Verify Email")
+        })
+        .build()
+
+      this.notifyObserver(payload)
       return Promise.resolve(result)
     } catch (err) {
       return this.catchResponse(err)
@@ -112,7 +145,9 @@ class AuthController extends Controller {
     }
   }
 
-
 }
 
-export default new AuthController()
+const authController = new AuthController()
+authController.registerObserver(emailObserver)
+
+export default authController
