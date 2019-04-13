@@ -1,4 +1,4 @@
-import express from "express"
+import express, { Request, Response } from "express"
 import compression from "compression"
 import bodyParser from "body-parser"
 import expressValidator from "express-validator"
@@ -20,6 +20,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 // routes
+app.get("/docs", (req: Request, res: Response) => res.sendFile(`${__dirname}/../public/index.html`))
 app.use("/v1/user", userRoute)
 app.use("/v1/auth", authRoute)
 
