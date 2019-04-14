@@ -115,7 +115,22 @@ class AuthController extends Controller implements Observable {
 
   refreshToken(req: Request) {
     try {
-
+      const authHeader = req.header("Authorization") || ""
+      const res: ResponseObject = {
+        status_code: 401, message: "Unauthenticated",
+        data: [], dev_message: "Authorization header is required",
+      }
+      if (!authHeader) {
+        throw res
+      }
+      const token: string = authHeader.split(" ")[1];
+      const decoded: object | string = jwt.verify(token, process.env.SECRET)
+      const newtoken = jwt.sign(decoded, process.env.SECRET, { expiresIn: "30d" })
+      res.status_code = 200
+      res.message = locale.__("Success")
+      res.dev_message = "success"
+      res.data = [{ access_token: newtoken }]
+      return Promise.resolve(res)
     } catch (err) {
       return this.catchResponse(err)
     }
