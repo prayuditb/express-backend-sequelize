@@ -55,7 +55,7 @@ export default abstract class Controller {
         page, perpage, total_pages: Math.ceil(count / perpage)
       }
 
-      const options: Sequelize.FindOptions = {
+      const options: { [key: string]: any } = {
         offset,
         limit: perpage
       }
@@ -66,15 +66,16 @@ export default abstract class Controller {
 
       // query with join relation
       if (relations !== "") {
-
-        const relationModels: any[] | Error = this.getRelationModels(relations.split(","), db)
-        if (relationModels instanceof Error) {
-          response.status_code = 422
-          response.dev_message = relationModels.message
-          response.message = locale.__("Find relation failed")
-          throw response
-        }
-        options.include = relationModels
+        this.model.relationAliases = this.model.relationAliases || []
+        options.include = relations.split(",").map((relation: string) => {
+          if (this.model.relationAliases.indexOf(relation) < 0) {
+            response.status_code = 422
+            response.dev_message = `some relation not found, avalilable relation are [${this.model.relationAliases.join(",")}]`
+            response.message = locale.__("Find relation failed")
+            throw response
+          }
+          return relation
+        })
       }
 
       // query with where clause
@@ -123,7 +124,7 @@ export default abstract class Controller {
 
   // find spesific data by its id
   async find(id: number, req: Request): Promise<ResponseObject> {
-    const relations: string = req.query.relation || ""
+    const relations: string = req.query.relations || ""
     const response: ResponseObject = {
       status_code: 200,
       message: locale.__("Success"),
@@ -132,7 +133,7 @@ export default abstract class Controller {
     }
 
     try {
-      const options: Sequelize.FindOptions = {
+      const options: { [key:string]: any } = {
         where: { id }
       }
 
@@ -143,14 +144,16 @@ export default abstract class Controller {
 
       // query with join relation
       if (relations !== "") {
-        const relationModels: any[] | Error = this.getRelationModels(relations.split(","), db)
-        if (relationModels instanceof Error) {
-          response.status_code = 422
-          response.dev_message = relationModels.message
-          response.message = locale.__("Find relation failed")
-          throw response
-        }
-        options.include = relationModels
+        this.model.relationAliases = this.model.relationAliases || []
+        options.include = relations.split(",").map((relation: string) => {
+          if (this.model.relationAliases.indexOf(relation) < 0) {
+            response.status_code = 422
+            response.dev_message = `some relation not found, avalilable relation are [${this.model.relationAliases.join(",")}]`
+            response.message = locale.__("Find relation failed")
+            throw response
+          }
+          return relation
+        })
       }
 
       response.data = await this.model.findAll(options)

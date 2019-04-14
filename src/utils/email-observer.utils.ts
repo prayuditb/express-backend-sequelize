@@ -49,6 +49,8 @@ export class EmailBuilder {
   }
 }
 
+export const FORGOT_PASSWORD = "forgot_password"
+export const VERIFY_EMAIL = "verify_email"
 
 export class EmailObserver implements Observer {
   private payload: Payload
@@ -66,9 +68,9 @@ export class EmailObserver implements Observer {
       .addPersonalization(payload.email, payload.name, payload.subject, payload.dynamic_template)
 
     switch (payload.type) {
-      case "forgot_password": builder.setTemplateID(process.env.SENDGRID_TEMPLATE_FORGOT_PASSWORD)
+      case FORGOT_PASSWORD: builder.setTemplateID(process.env.SENDGRID_TEMPLATE_FORGOT_PASSWORD)
         break;
-      case "verify_email": builder.setTemplateID(process.env.SENDGRID_TEMPLATE_VERIFY_EMAIL)
+      case VERIFY_EMAIL: builder.setTemplateID(process.env.SENDGRID_TEMPLATE_VERIFY_EMAIL)
         break;
     }
 

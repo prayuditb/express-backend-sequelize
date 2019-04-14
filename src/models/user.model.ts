@@ -15,8 +15,10 @@ export class User extends Sequelize.Model {
   readonly updated_at!: Date;
   readonly deleted_at!: Date;
 
+  // we need this relation aliases for easier query
+  static relationAliases = ["user_roles"]
   static associate(db: DB) {
-    db.User.hasMany(db.UserRole)
+    db.User.hasMany(db.UserRole, { as: "user_roles" })
   }
 }
 

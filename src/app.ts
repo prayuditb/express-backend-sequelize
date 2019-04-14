@@ -3,6 +3,7 @@ import compression from "compression"
 import bodyParser from "body-parser"
 import expressValidator from "express-validator"
 import localeMiddleware from "./middlewares/locale.middleware"
+import authMiddleware from "./middlewares/auth.middleware"
 
 import userRoute from "./routes/user.route"
 import authRoute from "./routes/auth.route"
@@ -21,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 // routes
 app.get("/docs", (req: Request, res: Response) => res.sendFile(`${__dirname}/../public/index.html`))
-app.use("/v1/user", userRoute)
+app.use("/v1/user", authMiddleware(), userRoute)
 app.use("/v1/auth", authRoute)
 
 export default app

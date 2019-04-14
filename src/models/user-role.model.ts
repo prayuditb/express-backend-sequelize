@@ -6,9 +6,11 @@ export class UserRole extends Sequelize.Model {
   role_id: number
   user_id: number
 
+  // we need this relation aliases for easier query
+  static relationAliases = ["role", "user"]
   static associate(db: DB) {
-    db.UserRole.belongsTo(db.User)
-    db.UserRole.belongsTo(db.Role)
+    db.UserRole.belongsTo(db.User, { as: "user" })
+    db.UserRole.belongsTo(db.Role, { as: "role" })
   }
 
 }
@@ -20,6 +22,7 @@ export default (sequelize: Sequelize.Sequelize) => {
   }, {
     sequelize,
     timestamps: false,
+    underscored: true,
     tableName: "user_roles"
   })
    return UserRole

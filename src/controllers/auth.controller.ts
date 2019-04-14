@@ -5,7 +5,7 @@ import bcrypt from "bcrypt-nodejs"
 import Controller from "./base.controller"
 import db from "../models"
 import PayloadBuilder from "../utils/payload-builder.utils"
-import emailObserver from "../utils/email-observer.utils"
+import emailObserver, { FORGOT_PASSWORD, VERIFY_EMAIL } from "../utils/email-observer.utils"
 import locale from "i18n"
 
 class AuthController extends Controller implements Observable {
@@ -98,7 +98,7 @@ class AuthController extends Controller implements Observable {
       const payload = new PayloadBuilder().setEmail(sign.email)
         .setSubject(locale.__("Please verify your email address"))
         .setName(`${sign.first_name} ${sign.last_name}`)
-        .setType("verify_email")
+        .setType(VERIFY_EMAIL)
         .setDynamicTemplate({
           url: `${process.env.BASE_URL}/v1/auth/verify-email?token=${token}`,
           message: locale.__("register welcome email"),

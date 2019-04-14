@@ -6,8 +6,9 @@ export class Role extends Sequelize.Model {
   name: string
   description: string
 
+  static relationAliases = ["user_roles"]
   static associate(db: DB) {
-    db.Role.hasMany(db.UserRole);
+    db.Role.hasMany(db.UserRole, { as: "user_roles" });
   }
 
 }
