@@ -12,7 +12,7 @@ i18n.configure({
 
 export default () => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const lang: string = req.query.lang || "en"
+    const lang: string = req.header("Accept-Language") || "en"
     if (i18n.getLocales().indexOf(lang) >= 0) {
       i18n.setLocale(lang)
     }

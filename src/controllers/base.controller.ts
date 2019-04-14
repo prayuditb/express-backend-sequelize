@@ -133,7 +133,7 @@ export default abstract class Controller {
     }
 
     try {
-      const options: { [key:string]: any } = {
+      const options: { [key: string]: any } = {
         where: { id }
       }
 

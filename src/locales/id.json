@@ -10,5 +10,6 @@
   "Password is incorrect": "Kata sandi salah",
   "Please verify your email address": "Mohon verifikasi email anda",
   "register welcome email": "Terimakasih telah bergabung. Kami senang melihatmu di sini dan ayo buat sesuatu yang luar biasa bersama kami. Sebelum itu, kami harus memverifikasi alamat emailmu dengan mengklik tombol di bawah ini.",
-  "Verify Email": "Verifikasi Email"
+  "Verify Email": "Verifikasi Email",
+  "Route not found": "Alamat tidak ditemukan"
 }

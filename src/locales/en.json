@@ -10,5 +10,6 @@
   "Password is incorrect": "Password is incorrect",
   "Please verify your email address": "Please verify your email address",
   "register welcome email": "Thanks for joining. We glad to see you here and let's make an awosome things with us. Before that, we need to verify your email address by clicking button below.",
-  "Verify Email": "Verify Email"
+  "Verify Email": "Verify Email",
+  "Route not found": "Route not found"
 }
