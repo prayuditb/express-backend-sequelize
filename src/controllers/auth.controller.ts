@@ -97,6 +97,7 @@ class AuthController extends Controller implements Observable {
         last_name: result.data[0].last_name,
       }
       const token = jwt.sign(sign, process.env.SECRET, { expiresIn: "30d" })
+      delete result.data[0].password
       result.data = [{ ...result.data[0], access_token: token}]
 
       // prepare payload to send email using builder pattern

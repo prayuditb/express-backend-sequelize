@@ -4,7 +4,7 @@ type Personalizations = {
   to: {
     email: string
     name: string
-  }
+  }[]
   dynamic_template_data: {
     [key: string]: any
   }
@@ -30,7 +30,7 @@ export class EmailBuilder {
 
   addPersonalization(to_email: string, to_name: string, subject: string, dynamic_template: { [key: string]: any }) {
     this.data.personalizations.push({
-      to: { email: to_email, name: to_name },
+      to: [{ email: to_email, name: to_name }],
       dynamic_template_data: dynamic_template,
       subject
     })
@@ -53,7 +53,8 @@ export const FORGOT_PASSWORD = "forgot_password"
 export const VERIFY_EMAIL = "verify_email"
 
 export class EmailObserver implements Observer {
-  private payload: Payload
+  private payload: EmailPayload
+  private toEmail: string
   // use dependency injection
   constructor(private client: AxiosInstance) {}
 
@@ -75,15 +76,16 @@ export class EmailObserver implements Observer {
     }
 
     this.payload = builder.build()
+    this.toEmail = payload.email
     this.send()
   }
 
   async send() {
     try {
       const res = await this.client.post("/mail/send", this.payload)
-      if (process.env.NODE_ENV !== "production") console.log("Email sent to: ", this.payload.email)
+      if (process.env.NODE_ENV !== "production") console.log(`Email sent ${this.toEmail}`)
     } catch (err) {
-      console.warn(`failed to send email to ${this.payload.email}: `, err)
+      console.warn(`failed to send email to ${this.toEmail}: `, err.response.data)
     }
   }
 }
