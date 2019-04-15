@@ -14,10 +14,12 @@ class AuthController extends Controller implements Observable {
     super(db.User, ["password", "forgot_password"])
   }
 
+  // add observer instance
   registerObserver(observer: Observer) {
     this.observers.push(observer)
   }
 
+  // remove observer instance
   removeObserver(observer: Observer): number {
     const idx = this.observers.indexOf(observer)
     if (idx >= 0) {
@@ -26,10 +28,12 @@ class AuthController extends Controller implements Observable {
     return idx
   }
 
+  // trigger observer to take action
   notifyObserver(payload: Payload) {
     this.observers.forEach((observer: Observer) => observer.update(payload))
   }
 
+  // login with email route: /auth/login-email
   async loginEmail(req: Request) {
     const res: ResponseObject = {
       status_code: 200,
@@ -76,6 +80,7 @@ class AuthController extends Controller implements Observable {
     }
   }
 
+  // register with email. route: auth/register-email
   async registerEmail(req: Request) {
     try {
       delete req.body.secret
@@ -113,14 +118,16 @@ class AuthController extends Controller implements Observable {
     }
   }
 
-  refreshToken(req: Request) {
+  // route: auth/refresh-token
+  // entend expirity time token
+  async refreshToken(req: Request) {
     try {
       const authHeader = req.header("Authorization") || ""
       const res: ResponseObject = {
         status_code: 401, message: "Unauthenticated",
         data: [], dev_message: "Authorization header is required",
       }
-      if (!authHeader) {
+      if (!authHeader) { // TODO: move this validation to auth.route
         throw res
       }
       const token: string = authHeader.split(" ")[1];
@@ -136,7 +143,46 @@ class AuthController extends Controller implements Observable {
     }
   }
 
-  forgotPassword(req: Request) {
+  // route: auth/forgot-password
+  // will send a link to reset password to email
+  async forgotPassword(req: Request) {
+    try {
+      const res: ResponseObject = {
+        status_code: 404, data: [],
+        message: locale.__("User not found"), dev_message: "not found",
+      }
+      const email = req.body.email
+      const users: any[] = await this.model.findAll({
+        where: { email }
+      })
+      if (users.length <= 0) {
+        throw res
+      }
+      const token = jwt.sign({ email, full_name: `${users[0].first_name} ${users[0].last_name}` }, process.env.SECRET, { expiresIn: "1hr" })
+      const payload = new PayloadBuilder().setEmail(email)
+        .setName(`${users[0].first_name} ${users[0].last_name}`)
+        .setSubject("Reset your password")
+        .setDynamicTemplate({
+          url: `${process.env.BASE_URL}/v1/auth/reset-passoword?token=${token}`,
+          button_label: "Reset Password", // TODO: add locale
+          message: "reset your password by clicking button be low", // TODO: add locale and provide a nice words
+          full_name: `${users[0].first_name} ${users[0].last_name}`
+        })
+        .setType(FORGOT_PASSWORD)
+        .build()
+      this.notifyObserver(payload)
+      res.status_code = 200
+      res.message = "A link to reset your password has sent to your email" // TODO: add locale
+      res.dev_message = "success"
+      return Promise.resolve(res)
+    } catch (err) {
+      return this.catchResponse(err)
+    }
+  }
+
+  // verify token that sent to email before access reset password
+  // route: auth/forgot-password-verify
+   async forgotPasswordVerifyToken(req: Request) {
     try {
 
     } catch (err) {
@@ -144,15 +190,8 @@ class AuthController extends Controller implements Observable {
     }
   }
 
-  resetPassword(req: Request) {
-    try {
-
-    } catch (err) {
-      return this.catchResponse(err)
-    }
-  }
-
-  loginGoogle(req: Request) {
+  // reset password user. route: auth/reset-password
+   async resetPassword(req: Request) {
     try {
 
     } catch (err) {
