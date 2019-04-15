@@ -83,7 +83,7 @@ export class EmailObserver implements Observer {
       const res = await this.client.post("/mail/send", this.payload)
       if (process.env.NODE_ENV !== "production") console.log("Email sent to: ", this.payload.email)
     } catch (err) {
-      console.warn(`failed to send email to ${this.payload.email}: ${err.message}`)
+      console.warn(`failed to send email to ${this.payload.email}: `, err)
     }
   }
 }

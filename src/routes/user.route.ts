@@ -22,7 +22,7 @@ const bodyValidations = [
  * @apiDescription Get list of availeble user
  * @apiParam page {Number} number
  * @apiParam perpage {Number} number
- * @apiParam relations {String} comma sparated model name. use to retrieve data along with relation. 
+ * @apiParam relations {String} comma sparated model name. use to retrieve data along with relation.
  * available relation: user_users
  * @apiParam where {String} get data with where condition. currently only support `where = where_value`
  * @apiParam where_value {String} value for where condition
@@ -43,7 +43,7 @@ router.get("/", (req: Request, res: Response) => {
  * @apiName FindUser
  * @apiGroup User
  * @apiParam {Number} id User Id
- * @apiParam relations {String} comma sparated model name. use to retrieve data along with relation. 
+ * @apiParam relations {String} comma sparated model name. use to retrieve data along with relation.
  * available relation: user_users
  * @apiParamExample Request-Example:
  * GET: http://<base_url>/v1/user/1?relations=user_users

@@ -18,7 +18,7 @@ const bodyValidations = [
  * @apiDescription Get list of availeble role
  * @apiParam page {Number} number
  * @apiParam perpage {Number} number
- * @apiParam relations {String} comma sparated model name. use to retrieve data along with relation. 
+ * @apiParam relations {String} comma sparated model name. use to retrieve data along with relation.
  * available relation: user_roles
  * @apiParam where {String} get data with where condition. currently only support `where = where_value`
  * @apiParam where_value {String} value for where condition

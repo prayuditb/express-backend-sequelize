@@ -105,9 +105,11 @@ class AuthController extends Controller implements Observable {
         .setName(`${sign.first_name} ${sign.last_name}`)
         .setType(VERIFY_EMAIL)
         .setDynamicTemplate({
-          url: `${process.env.BASE_URL}/v1/auth/verify-email?token=${token}`,
+          salutation: "Hello",
+          receiver_name: sign.first_name,
           message: locale.__("register welcome email"),
           button_label: locale.__("Verify Email")
+          button_url: `${process.env.BASE_URL}/v1/auth/verify-email?token=${token}`,
         })
         .build()
 

@@ -2,6 +2,7 @@ import express, { Request, Response } from "express"
 import { checkSchema, check, oneOf, validationResult } from "express-validator/check"
 import authController from "../controllers/auth.controller"
 import validationHandler from "../middlewares/validation-handler.middleware"
+import authMiddleware from "../middlewares/auth.middleware";
 
 const router = express.Router()
 
@@ -61,6 +62,20 @@ router.post("/register-email",
   validationHandler(),
   (req: Request, res: Response) => {
   authController.registerEmail(req).then((response: ResponseObject) => {
+    res.status(response.status_code).json(response)
+  })
+})
+
+/**
+ * @api {get} /auth/refreshh-token Refresh Token
+ * @apiVersion 1.0.0
+ * @apiName Refresh token
+ * @apiDescription Extend expirity time of token and will
+ * @apiGroup Auth
+ * @apiHeader {String} Authorization token for authorization using format `Authorization: Bearer <your_token>`
+ */
+router.get("/refresh-token", authMiddleware(), (req: Request, res: Response) => {
+  authController.refreshToken(req).then((response: ResponseObject) => {
     res.status(response.status_code).json(response)
   })
 })
