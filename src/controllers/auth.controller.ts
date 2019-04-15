@@ -108,7 +108,7 @@ class AuthController extends Controller implements Observable {
           salutation: "Hello",
           receiver_name: sign.first_name,
           message: locale.__("register welcome email"),
-          button_label: locale.__("Verify Email")
+          button_label: locale.__("Verify Email"),
           button_url: `${process.env.BASE_URL}/v1/auth/verify-email?token=${token}`,
         })
         .build()
@@ -128,9 +128,6 @@ class AuthController extends Controller implements Observable {
       const res: ResponseObject = {
         status_code: 401, message: "Unauthenticated",
         data: [], dev_message: "Authorization header is required",
-      }
-      if (!authHeader) { // TODO: move this validation to auth.route
-        throw res
       }
       const token: string = authHeader.split(" ")[1];
       const decoded: object | string = jwt.verify(token, process.env.SECRET)
